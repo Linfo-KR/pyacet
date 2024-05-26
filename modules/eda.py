@@ -1,31 +1,60 @@
 import io
+import os
+import matplotlib
 import warnings
 
 import datetime as dt
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 from fpdf import FPDF
 
 warnings.filterwarnings('ignore')
+matplotlib.use('Agg')
 
 class EDA:
     """
+    EDA class
+    
     Pandas DataFrame 자료형에 대한 EDA(탐색적 데이터 분석)를 수행하는 Module.
     Input Data로 EDA를 수행할 데이터를 입력.
     
     Attributes:
-        input : EDA를 수행할 Dataset (Pandas DataFrame / List / Dictionary / Numpy Array).
+    -----------
+        input :
+            EDA를 수행할 Dataset (Pandas DataFrame / List / Dictionary / Numpy Array).
         
     Methods:
-        _convert_to_df(input) : pd.DataFrame / list / dict / np.ndarray를 pd.DataFrame으로 변환하는 함수.
-        info() : Input Data에 대한 Information을 출력(Row, Col 수 / Head, Tail / ColName, Data Types / Missing Values 수 / Dupicated Values 수)하는 함수.
-        summary() : Input Data의 기술통계를 출력(Numerical Values / Categorical Values / Datetime Values)하는 함수.
-        correlation() : Input Data의 Numerical Features를 대상으로 변수 간 상관관계(Pearson Correlation)를 출력하는 함수.
-        save_markdown(filename) : info(), summary() Function의 결과를 Markdown Documents로 저장하는 함수.
-        save_pdf(filename) : info(), summary() Function의 결과를 PDF Documents로 저장하는 함수.
+    --------
+        _convert_to_df(input) :
+            pd.DataFrame / list / dict / np.ndarray를 pd.DataFrame으로 변환하는 함수.
+        _set_plot_style() :
+            Plot의 Default Style을 설정하는 함수.
+        _clear_plot() :
+            matplotlib.pyplot을 clean(cla, clf, close)하는 함수.
+        _save_plot(plot, filepath, gnames, *cols) :
+            Plot의 Title를 지정하고, 결과물을 저장하는 함수.
+        info() :
+            Input Data에 대한 Information을 출력(Row, Col 수 / Head, Tail / ColName, Data Types / Missing Values 수 / Dupicated Values 수)하는 함수.
+        summary() :
+            Input Data의 기술통계를 출력(Numerical Values / Categorical Values / Datetime Values)하는 함수.
+        correlation() :
+            Input Data의 Numerical Features를 대상으로 변수 간 상관관계(Pearson Correlation)를 출력하는 함수.
+        save_markdown(filename) :
+            info(), summary() Function의 결과를 Markdown Documents로 저장하는 함수.
+        save_pdf(filename) :
+            info(), summary() Function의 결과를 PDF Documents로 저장하는 함수.
+        visualize(filepath) :
+            Input Data의 모든 변수에 대해 Visualization하는 함수.
         
     Update:
+    -------
+        save_pdf() :
+            PDF Documents Layout Update 예정
+
+        
         Processing...
     """
     
@@ -46,6 +75,27 @@ class EDA:
             return pd.DataFrame(input)
         else:
             raise TypeError('Input Data Must Be a Pandas DataFrame, Dict, List or Numpy Array.')
+        
+    def _set_plot_style(self):
+        plt.style.use('ggplot')
+        plt.rcParams['figure.figsize'] = (12, 8)
+        plt.rcParams['font.size'] = 10
+        plt.rcParams['font.family'] = 'Malgun Gothic'
+        plt.rcParams['axes.unicode_minus'] = False
+        plt.rcParams['axes.grid'] = True
+        plt.rcParams['axes.titleweight'] = 'bold'
+        plt.rcParams['axes.labelweight'] = 'bold'
+        
+    def _clear_plot(self):
+        plt.cla()
+        plt.clf()
+        plt.close()
+        
+    def _save_plot(self, plot, filepath, gnames, *cols):
+        title = f'{gnames} of {", ".join(cols)}' if cols else f'{gnames}'
+        plot.set(title)
+        plt.savefig(filepath + gnames + f'_' + '_'.join(cols) + '.png')
+        self._clear_plot()
         
     def info(self):
         buffer = io.StringIO()
@@ -123,7 +173,8 @@ class EDA:
         buffer.close()
     
         return correlation_str
-        
+    
+    # Preparing Methods Update
     def save_markdown(self, filename):
         info_str = self.info()
         summary_str = self.summary()
@@ -138,6 +189,7 @@ class EDA:
             f.write("\n\n03. Data Correlation Analysis\n\n")
             f.write(correlation_str)
             
+    # Preparing Methods Update
     def save_pdf(self, filename):
         info_str = self.info()
         summary_str = self.summary()
@@ -167,3 +219,101 @@ class EDA:
         document.multi_cell(w=0, h=5, txt=correlation_str)
         
         document.output(filename)
+        
+    def visualize(self, filepath):
+        self._set_plot_style()
+        
+        if not filepath.endswith('/'):
+            filepath += '/'
+        os.makedirs(filepath, exist_ok=True)
+        
+        # Numerical Data
+        for col in self.num_cols.tolist():
+            try:
+                # gname : Histogram
+                plt.figure()
+                histogram = sns.histplot(self.input[col], kde=False)
+                self._save_plot(histogram, filepath, 'Histogram', col)
+                
+                # gname : KDE
+                plt.figure()
+                kde = sns.kdeplot(self.input[col], kde=True)
+                self._save_plot(kde, filepath, 'KDE', col)
+                
+                # gname : Histogram_KDE
+                plt.figure()
+                histogram_kde = sns.histplot(self.input[col], kde=True)
+                self._save_plot(histogram_kde, filepath, 'Histogram_KDE', col)
+            
+            except Exception as e:
+                print(f"Could not plot numerical data for column {col}: {e}")
+                pass
+            
+        # Categorical Data
+        for col in self.cat_cols.tolist():
+            try:
+                # gname : CountPlot
+                plt.figure()
+                count = sns.countplot(x=self.input[col])
+                self._save_plot(count, filepath, 'CountPlot', col)
+                
+                # gname : BarPlot
+                plt.figure()
+                bar = sns.barplot(x=self.input[col].value_counts().index, y=self.input[col].value_counts())
+                self._save_plot(bar, filepath, 'BarPlot', col)
+                
+                # gname : PointPlot
+                plt.figure()
+                point = sns.pointplot(x=self.input[col].value_counts().index, y=self.input[col].value_counts())
+                self._save_plot(point, filepath, 'PointPlot', col)
+                
+                # gname : BoxPlot
+                plt.figure()
+                box = sns.boxplot(x=self.input[col])
+                self._save_plot(box, filepath, 'BoxPlot', col)
+                
+                # gname : ViolinPlot
+                plt.figure()
+                violin = sns.violinplot(x=self.input[col])
+                self._save_plot(violin, filepath, 'ViolinPlot', col)
+                
+                # gname : PiePlot
+                plt.figure()
+                pie =  self.input[col].value_counts().plot.pie()
+                self._save_plot(pie, filepath, 'PiePlot', col)
+                
+            except Exception as e:
+                print(f"Could not plot categorical data for column {col}: {e}")
+                pass
+        
+        # gname : Heatmap
+        try:
+            plt.figure()
+            heatmap = sns.heatmap(self.input.corr(), annot=True)
+            self._save_plot(heatmap, filepath, 'Heatmap')
+            
+        except Exception as e:
+            print(f"Could not plot heatmap: {e}")
+            pass
+        
+        for i, col1 in enumerate(self.num_cols.tolist()):
+            for col2 in self.num_cols.tolist()[i+1:]:
+                try:
+                    # gname : LinePlot
+                    plt.figure()
+                    line = sns.lineplot(x=self.input[col1], y=self.input[col2])
+                    self._save_plot(line, filepath, 'LinePlot', col1, col2)
+
+                    # gname : ScatterPlot
+                    plt.figure()
+                    scatter = sns.scatterplot(x=self.input[col1], y=self.input[col2])
+                    self._save_plot(scatter, filepath, 'ScatterPlot', col1, col2)
+                    
+                    # gname : Abline
+                    plt.figure()
+                    abline = sns.regplot(x=self.input[col1], y=self.input[col2], ci=None)
+                    self._save_plot(abline, filepath, 'Abline', col1, col2)
+
+                except Exception as e:
+                    print(f"Could not plot relationship for columns {col1} and {col2}: {e}")
+                    pass
