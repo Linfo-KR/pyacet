@@ -53,6 +53,8 @@ class EDA:
     -------
         save_pdf() :
             PDF Documents Layout Update 예정
+        visualize() :
+            Plot Design 개선 및 출력 Plot 조정 예정
 
         
         Processing...
@@ -91,10 +93,12 @@ class EDA:
         plt.clf()
         plt.close()
         
-    def _save_plot(self, plot, filepath, gnames, *cols):
+    def _save_plot(self, filepath, gnames, *cols):
         title = f'{gnames} of {", ".join(cols)}' if cols else f'{gnames}'
-        plot.set(title)
+        plt.title(title)
+        plt.tight_layout()
         plt.savefig(filepath + gnames + f'_' + '_'.join(cols) + '.png')
+        print(f'Create Plot : {title}')
         self._clear_plot()
         
     def info(self):
@@ -175,6 +179,7 @@ class EDA:
         return correlation_str
     
     # Preparing Methods Update
+    # Layout UI Update
     def save_markdown(self, filename):
         info_str = self.info()
         summary_str = self.summary()
@@ -190,6 +195,7 @@ class EDA:
             f.write(correlation_str)
             
     # Preparing Methods Update
+    # Layout UI Update
     def save_pdf(self, filename):
         info_str = self.info()
         summary_str = self.summary()
@@ -220,6 +226,10 @@ class EDA:
         
         document.output(filename)
         
+    # KDE 파트 에러 수정
+    # 그래프 개수 줄이기 + 가시성 개선
+    # Style Update
+    # y axes 지정
     def visualize(self, filepath):
         self._set_plot_style()
         
@@ -231,19 +241,24 @@ class EDA:
         for col in self.num_cols.tolist():
             try:
                 # gname : Histogram
+                # Not Y Axes
                 plt.figure()
-                histogram = sns.histplot(self.input[col], kde=False)
-                self._save_plot(histogram, filepath, 'Histogram', col)
+                sns.histplot(self.input[col], kde=False)
+                self._save_plot(filepath, 'Histogram', col)
                 
                 # gname : KDE
+                # Not Y Axes
                 plt.figure()
-                kde = sns.kdeplot(self.input[col], kde=True)
-                self._save_plot(kde, filepath, 'KDE', col)
+                sns.kdeplot(self.input[col], kde=True)
+                self._save_plot(filepath, 'KDE', col)
                 
                 # gname : Histogram_KDE
+                # Not Y Axes
                 plt.figure()
-                histogram_kde = sns.histplot(self.input[col], kde=True)
-                self._save_plot(histogram_kde, filepath, 'Histogram_KDE', col)
+                sns.histplot(self.input[col], kde=True)
+                self._save_plot(filepath, 'Histogram_KDE', col)
+                
+                # gname : BoxPlot
             
             except Exception as e:
                 print(f"Could not plot numerical data for column {col}: {e}")
@@ -254,33 +269,33 @@ class EDA:
             try:
                 # gname : CountPlot
                 plt.figure()
-                count = sns.countplot(x=self.input[col])
-                self._save_plot(count, filepath, 'CountPlot', col)
+                sns.countplot(x=self.input[col])
+                self._save_plot(filepath, 'CountPlot', col)
                 
                 # gname : BarPlot
                 plt.figure()
-                bar = sns.barplot(x=self.input[col].value_counts().index, y=self.input[col].value_counts())
-                self._save_plot(bar, filepath, 'BarPlot', col)
+                sns.barplot(x=self.input[col].value_counts().index, y=self.input[col].value_counts())
+                self._save_plot(filepath, 'BarPlot', col)
                 
                 # gname : PointPlot
                 plt.figure()
-                point = sns.pointplot(x=self.input[col].value_counts().index, y=self.input[col].value_counts())
-                self._save_plot(point, filepath, 'PointPlot', col)
+                sns.pointplot(x=self.input[col].value_counts().index, y=self.input[col].value_counts())
+                self._save_plot(filepath, 'PointPlot', col)
                 
                 # gname : BoxPlot
                 plt.figure()
-                box = sns.boxplot(x=self.input[col])
-                self._save_plot(box, filepath, 'BoxPlot', col)
+                sns.boxplot(x=self.input[col])
+                self._save_plot(filepath, 'BoxPlot', col)
                 
                 # gname : ViolinPlot
                 plt.figure()
-                violin = sns.violinplot(x=self.input[col])
-                self._save_plot(violin, filepath, 'ViolinPlot', col)
+                sns.violinplot(x=self.input[col])
+                self._save_plot(filepath, 'ViolinPlot', col)
                 
                 # gname : PiePlot
                 plt.figure()
-                pie =  self.input[col].value_counts().plot.pie()
-                self._save_plot(pie, filepath, 'PiePlot', col)
+                self.input[col].value_counts().plot.pie()
+                self._save_plot(filepath, 'PiePlot', col)
                 
             except Exception as e:
                 print(f"Could not plot categorical data for column {col}: {e}")
@@ -289,8 +304,8 @@ class EDA:
         # gname : Heatmap
         try:
             plt.figure()
-            heatmap = sns.heatmap(self.input.corr(), annot=True)
-            self._save_plot(heatmap, filepath, 'Heatmap')
+            sns.heatmap(self.input.corr(), annot=True)
+            self._save_plot(filepath, 'Heatmap')
             
         except Exception as e:
             print(f"Could not plot heatmap: {e}")
@@ -301,18 +316,18 @@ class EDA:
                 try:
                     # gname : LinePlot
                     plt.figure()
-                    line = sns.lineplot(x=self.input[col1], y=self.input[col2])
-                    self._save_plot(line, filepath, 'LinePlot', col1, col2)
+                    sns.lineplot(x=self.input[col1], y=self.input[col2])
+                    self._save_plot(filepath, 'LinePlot', col1, col2)
 
                     # gname : ScatterPlot
                     plt.figure()
-                    scatter = sns.scatterplot(x=self.input[col1], y=self.input[col2])
-                    self._save_plot(scatter, filepath, 'ScatterPlot', col1, col2)
+                    sns.scatterplot(x=self.input[col1], y=self.input[col2])
+                    self._save_plot(filepath, 'ScatterPlot', col1, col2)
                     
                     # gname : Abline
                     plt.figure()
-                    abline = sns.regplot(x=self.input[col1], y=self.input[col2], ci=None)
-                    self._save_plot(abline, filepath, 'Abline', col1, col2)
+                    sns.regplot(x=self.input[col1], y=self.input[col2], ci=None)
+                    self._save_plot(filepath, 'Abline', col1, col2)
 
                 except Exception as e:
                     print(f"Could not plot relationship for columns {col1} and {col2}: {e}")
