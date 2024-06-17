@@ -88,7 +88,7 @@ class DataSummary:
         """
         입력 데이터의 datetime 열에 대한 기술통계량을 출력하는 함수.
 
-        Returns:
+        Returns: 
         --------
             dict: datetime 열에 대한 기술통계량 요약(Min / Max / Nunique / Year / Month / Day / DayOfWeek).
         """
