@@ -1,6 +1,5 @@
 import os
 
-import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -50,9 +49,9 @@ class Visualization:
         plt.clf()
         plt.close()
         
-    def _save_plot(self, plot_func, plot_name, *args, cols=None, subplots=True, col_length=None, box_violin=True, hue_length=None, **kwargs):
+    def _generate_logic(self, plot_func, plot_name, *args, single_plot=True, subplots=False, cols=None, multi_plot=False, **kwargs):
         """
-        플롯을 저장하는 메서드
+        Plot을 생성하는 Logic 메소드
         
         Parameters:
         -----------
@@ -62,54 +61,46 @@ class Visualization:
             저장할 플롯 파일 이름
         *args : tuple
             플롯 함수에 전달할 위치 인자
+        single_plot : boolean
+            single plot의 생성 여부 (default=True)
+        subplots : boolean
+            subplot의 사용 여부 (default=False)    
         cols : list, optional
             subplot에 전달할 열
-        subplots : boolean
-            subplot의 사용 여부 (default=True)
-        col_length : int
-            subplot에 전달할 열의 길이
-        box_violin : boolean
-            boxplot and violinplot 사용 여부 (default=True)
-        subplot_name : str
-            subplot에 전달할 타이틀 이름
+        multi_plot : boolean
+            multi plot(multi hues)의 사용 여부 (default=False)
         **kwargs : dict
             플롯 함수에 전달할 키워드 인자
         """
-        if subplots:
-            if box_violin:
-                n_h = calculate_ndim(col_length=hue_length, max_n=20)
-                fig_h, axes_h = plt.subplots(n_h, n_h, figsize=(20, 20))
-                axes_h = axes_h.flatten()
-                
+        if single_plot:
+            fig, ax = plt.subplots()
+            plot_func(*args, ax=ax, **kwargs)
+            ax.set_title(plot_name)
+            self._save_plot(fig, [ax], plot_name)
+        
+        elif subplots:
+            if multi_plot:
                 for idx, col in enumerate(cols):
+                    n = calculate_ndim(col_length=len(kwargs['x']))
+                    fig, axes = plt.subplots(n, n, figsize=(20, 20))
+                    axes = axes.flatten()
                     if 'x' in kwargs:
                         hues = kwargs['x']
-                        print(f"Start hues: {hues}")
                         if not isinstance(hues, list):
                             hues = [hues]
                         for idx_h, hue in enumerate(hues):
-                            if idx_h >= n_h * n_h:
+                            if idx_h >= n * n:
                                 break
                             kwargs['x'] = hue
                             kwargs['y'] = col
-                            print(f"(x, y): {kwargs['x']}, {kwargs['y']}")
-                            plot_func(ax=axes_h[idx_h], *args, **kwargs)
-                            axes_h[idx_h].set_xlabel(hue)
-                            axes_h[idx_h].set_ylabel(col)
+                            plot_func(data=self.input, ax=axes[idx_h], *args, **kwargs)
+                            axes[idx_h].set_xlabel(hue)
+                            axes[idx_h].set_ylabel(col)
                             
                         kwargs['x'] = hues
-                        print(f"End hues: {kwargs['x']}")
-                        
-                        if len(axes_h) > len(hues):
-                            for ax_h in axes_h[len(hues):]:
-                                fig_h.delaxes(ax_h)
-                
-                        plt.tight_layout()
-                        plt.savefig(os.path.join(self.output_dir, f"{plot_name}_{col}.png"))
-                self._clear_plot()
-                print(f"Generating Plot : {plot_name}_{col} in {self.output_dir}")
+                        self._save_plot(fig, axes, f"{plot_name}_{col}", len(hues))
             else:
-                n = calculate_ndim(col_length=col_length, max_n=20)
+                n = calculate_ndim(col_length=len(cols))
                 fig, axes = plt.subplots(n, n, figsize=(20, 20))
                 axes = axes.flatten()
                 
@@ -117,24 +108,32 @@ class Visualization:
                     if idx >= n * n:
                         break
                     plot_func(self.input[col], ax=axes[idx], *args, **kwargs)
-                
-                if len(axes) > len(cols):
-                    for ax in axes[len(cols):]:
-                        fig.delaxes(ax)
-                        
-                plt.tight_layout()
-                plt.savefig(os.path.join(self.output_dir, f"{plot_name}.png"))
-                self._clear_plot()
-                print(f"Generating Plot : {plot_name} in {self.output_dir}")
-        else:
-            plt.figure()
-            plot_func(*args, **kwargs)
-            plt.title(plot_name)
-            plt.tight_layout()
-            plt.savefig(os.path.join(self.output_dir, f"{plot_name}.png"))
-            self._clear_plot()
-            print(f"Generating Plot : {plot_name} in {self.output_dir}")
+                    
+                self._save_plot(fig, axes, plot_name, len(cols))
+            
+    def _save_plot(self, fig=None, axes=None, plot_name=str, n=None):
+        """
+        Plot을 저장하는 메서드
         
+        Parameters:
+        -----------
+        fig : matplotlib.figure.Figure
+            _generate_logic()으로 부터 전달받은 fig 객체
+        axes : list of matplotlib.axes._subplots.AxesSubplot
+            _generate_logic()으로 부터 전달받은 axes 객체
+        file_name : str
+            저장할 Plot의 file name
+        n : int
+            subplot 내 생성되는 plot의 수(len(cols) or len(hues))
+        """
+        if axes is not None and n and len(axes) > n:
+            for ax in axes[n:]:
+                fig.delaxes(ax)
+        plt.tight_layout()
+        plt.savefig(os.path.join(self.output_dir, f"{plot_name}.png"))
+        self._clear_plot()
+        print(f"Generating Plot : {plot_name} in {self.output_dir}")
+    
     def visualize_numerical(self, bins=30, hue_list=list):
         """
         Numerical Data를 시각화하는 메서드
@@ -149,21 +148,21 @@ class Visualization:
             box_violin_y와 hue의 None 여부
         """
         # histogram / histogram_kde / kde
-        self._save_plot(sns.histplot, 'histogram', cols=self.num_cols, subplots=True, col_length=len(self.num_cols), box_violin=False, bins=bins, kde=False)
-        self._save_plot(sns.histplot, 'histogram_kde', cols=self.num_cols, subplots=True, col_length=len(self.num_cols), box_violin=False, bins=bins, kde=True)
-        self._save_plot(sns.kdeplot, 'kde', cols=self.num_cols, subplots=True, col_length=len(self.num_cols), box_violin=False, fill=True)
+        self._generate_logic(sns.histplot, 'histogram', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False, bins=bins, kde=False)
+        self._generate_logic(sns.histplot, 'histogram_kde', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False, bins=bins, kde=True)
+        self._generate_logic(sns.kdeplot, 'kde', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False, fill=True)
         
         # boxplot / violinplot
         if hue is not None and isinstance(hue, list):
         # if hue is exist
-            self._save_plot(sns.boxplot, 'boxplot', cols=self.num_cols, subplots=True, hue_length=len(hue), box_violin=True, x=hue_list, data=self.input)
-            self._save_plot(sns.violinplot, 'violinplot', cols=self.num_cols, subplots=True, hue_length=len(hue), box_violin=True, x=hue_list, data=self.input)
+            self._generate_logic(sns.boxplot, 'boxplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=True, x=hue_list)
+            self._generate_logic(sns.violinplot, 'violinplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=True, x=hue_list)
         else:
             print('hue_list is Empty.')
             
         # if hue isn't exist
-        self._save_plot(sns.boxplot, 'boxplot', cols=self.num_cols, subplots=True, col_length=len(self.num_cols), box_violin=False)
-        self._save_plot(sns.violinplot, 'violinplot', cols=self.num_cols, subplots=True, col_length=len(self.num_cols), box_violin=False)
+        self._generate_logic(sns.boxplot, 'boxplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False)
+        self._generate_logic(sns.violinplot, 'violinplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False)
             
         def visualize_categorical(self):
             """
