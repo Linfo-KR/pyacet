@@ -30,13 +30,21 @@ def generate_testset():
     df['value'] = np.random.randn(len(date_range)) * 10 + np.linspace(10, 20, len(date_range))
     outliers = np.random.choice(len(date_range), size=5, replace=False)
     df.loc[outliers, 'value'] *= 3
+    df['value'] = round(df['value'], 1)
     
     df['temperature'] = np.random.normal(loc=15, scale=10, size=len(date_range))
     df['temperature'] += np.linspace(-5, 5, len(date_range))
     df.loc[outliers, 'temperature'] *= -1
+    df['temperature'] = round(df['temperature'], 1)
     
     df['humidity'] = np.random.uniform(low=20, high=100, size=len(date_range))
     df['humidity'] += np.sin(np.linspace(0, 2 * np.pi, len(date_range))) * 10
+    df['humidity'] = round(df['humidity'], 1)
+    
+    df['uv'] = np.random.uniform(low=0, high=80, size=len(date_range))
+    df['uv'] = round(df['uv'], 1)
+    
+    df['atmosphere'] = np.random.randint(low=0, high=200, size=len(date_range))
     
     df['rainfall'] = np.random.binomial(n=1, p=0.3, size=len(date_range))
     
@@ -49,5 +57,14 @@ def generate_testset():
     
     weathers = ['Hot', 'Cold', 'Sunny', 'Rain', 'Cloud']
     df['weather'] = np.random.choice(weathers, size=len(date_range))
+    
+    regions = ['NAEC', 'NAWC', 'SAEC', 'SAWC', 'ASIA', 'WAF', 'ESAF', 'NEUR', 'MID', 'AUZ']
+    df['region'] = np.random.choice(regions, size=len(date_range))
+    
+    num_duplicates = int(len(df) * 0.05)
+    duplicate_index = np.random.choice(len(df), size=num_duplicates, replace=True)
+    duplicate_data = df.sample(n=1).iloc[0].to_dict()
+    for idx in duplicate_index:
+        df.iloc[idx] = duplicate_data
     
     return df
