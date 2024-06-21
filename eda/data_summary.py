@@ -1,3 +1,6 @@
+import io
+import datetime as dt
+
 from data_loader import DataLoader
 
 class DataSummary:
@@ -39,12 +42,16 @@ class DataSummary:
                 
                 - int: 중복 행의 개수.
         """
+        buffer = io.StringIO()
+        self.input.info(buf=buffer)
+        
+        data_info = buffer.getvalue()
         data_shape = self.input.shape
         data_head = self.input.head()
         data_null = self.input.isnull().sum()
         data_duplication = self.input.duplicated().sum()
         
-        return self.input.info(), data_shape, data_head, data_null, data_duplication
+        return data_info, data_shape, data_head, data_null, data_duplication
     
     def data_numerical_summary(self):
         """
@@ -75,7 +82,7 @@ class DataSummary:
             cat_cols_summary = self.input[self.cat_cols].describe(include='O')
             features_dict = {}
             for col in self.cat_cols:
-                features = self.input[self.cat_cols].unique()
+                features = self.input[col].unique()
                 features_dict[col] = {'features': features.tolist(),
                                       'num_features': len(features)}
         else:
@@ -94,15 +101,18 @@ class DataSummary:
         """
         if len(self.dt_cols) > 0:
             dt_cols_summary = {
-                'summary': self.input[self.dt_cols].agg(['min', 'max', 'nunique']),
-                'year': self.input[self.dt_cols].dt.year.value_counts(),
-                'month': self.input[self.dt_cols].dt.month.value_counts(),
-                'day': self.input[self.dt_cols].dt.day.value_counts(),
-                'dayofweek': self.input[self.dt_cols].dt.dayofweek.value_counts()
+                'summary': self.input[self.dt_cols].agg(['min', 'max', 'nunique'])
             }
+            for col in self.dt_cols:
+                dt_cols_summary[col] = {
+                    'year': self.input[col].dt.year.value_counts(),
+                    'month': self.input[col].dt.month.value_counts(),
+                    'day': self.input[col].dt.day.value_counts(),
+                    'dayofweek': self.input[col].dt.dayofweek.value_counts()
+                }
         else:
             print('There are no datetime columns in the dataset.')
-            pass
+            return {}
         
         return dt_cols_summary
 
