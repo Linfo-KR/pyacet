@@ -179,10 +179,7 @@ class Visualization:
                 
             # if hue isn't exist
             self._generate_logic(sns.boxplot, 'boxplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False)
-            self._generate_logic(sns.violinplot, 'violinplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False)
-            
-            # heatmap
-            self._generate_logic(sns.heatmap, 'correlation', single_plot=True, subplots=False, multi_plot=False, data=self.corr_matrix, annot=True, fmt=".2f", cmap='coolwarm', cbar=True)
+            self._generate_logic(sns.violinplot, 'violinplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False)            
         else:
             print('self.num_cols is Empty.')
         
@@ -218,3 +215,18 @@ class Visualization:
             self._generate_logic(sns.lineplot, 'timeseriesplot', single_plot=False, subplots=True, cols=self.dt_cols, multi_plot=True, x=self.num_cols.tolist())
         else:
             print('self.dt_cols is Empty.')
+            
+    def visualize_heatmap(self):
+        """
+        Correlation Matrix를 시각화하는 메서드
+        
+        Parameters:
+        -----------
+        None
+        """
+        if self.num_cols is not None:
+            # heatmap
+            # return figure for generate report
+            self._generate_logic(sns.heatmap, 'correlation', single_plot=True, subplots=False, multi_plot=False, data=self.corr_matrix, annot=True, fmt=".2f", cmap='coolwarm', cbar=True)
+        else:
+            print('self.num_cols is Empty.')
