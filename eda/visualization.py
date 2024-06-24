@@ -3,9 +3,9 @@ import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from data_loader import DataLoader
-from data_summary import DataSummary
-from utils import *
+from eda.data_loader import DataLoader
+from eda.data_summary import DataSummary
+from eda.utils import *
 
 class Visualization:
     def __init__(self, input, output_dir, style='seaborn', font_scale=1.2, palette='deep', rc_params=None):
@@ -175,13 +175,13 @@ class Visualization:
                 self._generate_logic(sns.violinplot, 'violinplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=True, x=hue_list)
                 self._generate_logic(sns.scatterplot, 'scatterplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=True, x=self.num_cols.tolist())
             else:
-                print('hue_list is Empty.')
+                print('hue list is Empty.')
                 
             # if hue isn't exist
             self._generate_logic(sns.boxplot, 'boxplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False)
             self._generate_logic(sns.violinplot, 'violinplot', single_plot=False, subplots=True, cols=self.num_cols, multi_plot=False)            
         else:
-            print('self.num_cols is Empty.')
+            pass
         
     def visualize_categorical(self, hue_list=list):
         """
@@ -198,9 +198,9 @@ class Visualization:
                 self._generate_logic(sns.barplot, 'barplot', single_plot=False, subplots=True, cols=self.cat_cols, multi_plot=True, x=hue_list, errorbar=None)
                 self._generate_logic(sns.countplot, 'countplot', single_plot=False, subplots=True, cols=self.cat_cols, multi_plot=True, x=hue_list)
             else:
-                print('hue_list is Empty.')
+                print('hue list is Empty.')
         else:
-            print('self.cat_cols is Empty.')
+            pass
         
     def visualize_datetime(self):
         """
@@ -214,7 +214,7 @@ class Visualization:
             # lineplot
             self._generate_logic(sns.lineplot, 'timeseriesplot', single_plot=False, subplots=True, cols=self.dt_cols, multi_plot=True, x=self.num_cols.tolist())
         else:
-            print('self.dt_cols is Empty.')
+            pass
             
     def visualize_heatmap(self):
         """
@@ -229,4 +229,4 @@ class Visualization:
             # return figure for generate report
             self._generate_logic(sns.heatmap, 'correlation', single_plot=True, subplots=False, multi_plot=False, data=self.corr_matrix, annot=True, fmt=".2f", cmap='coolwarm', cbar=True)
         else:
-            print('self.num_cols is Empty.')
+            pass
