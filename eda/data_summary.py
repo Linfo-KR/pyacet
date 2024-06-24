@@ -1,7 +1,7 @@
 import io
 import datetime as dt
 
-from data_loader import DataLoader
+from eda.data_loader import DataLoader
 
 class DataSummary:
     """
@@ -61,13 +61,11 @@ class DataSummary:
         --------
             pandas.DataFrame: 수치형 열에 대한 기술통계량 요약.
         """
-        if len(self.num_cols) > 0:
+        if self.num_cols is not None and len(self.num_cols) > 0:
             num_cols_summary = round(self.input[self.num_cols].describe(), 2)
+            return num_cols_summary
         else:
-            print('There are no numerical columns in the dataset.')
             pass
-        
-        return num_cols_summary
     
     def data_categorical_summary(self):
         """
@@ -78,18 +76,16 @@ class DataSummary:
             pandas.DataFrame: 범주형 열에 대한 기술통계량 요약.
             dict: 범주형 열의 feature 고유값 및 개수 요약.
         """
-        if len(self.cat_cols) > 0:
+        if self.cat_cols is not None and len(self.cat_cols) > 0:
             cat_cols_summary = self.input[self.cat_cols].describe(include='O')
             features_dict = {}
             for col in self.cat_cols:
                 features = self.input[col].unique()
                 features_dict[col] = {'features': features.tolist(),
                                       'num_features': len(features)}
+            return cat_cols_summary, features_dict
         else:
-            print('There are no categorical columns in the dataset.')
             pass
-        
-        return cat_cols_summary, features_dict
     
     def data_datetime_summary(self):
         """
@@ -99,7 +95,7 @@ class DataSummary:
         --------
             dict: datetime 열에 대한 기술통계량 요약(Min / Max / Nunique / Year / Month / Day / DayOfWeek).
         """
-        if len(self.dt_cols) > 0:
+        if self.dt_cols is not None and len(self.dt_cols) > 0:
             dt_cols_summary = {
                 'summary': self.input[self.dt_cols].agg(['min', 'max', 'nunique'])
             }
@@ -110,11 +106,9 @@ class DataSummary:
                     'day': self.input[col].dt.day.value_counts(),
                     'dayofweek': self.input[col].dt.dayofweek.value_counts()
                 }
+            return dt_cols_summary
         else:
-            print('There are no datetime columns in the dataset.')
-            return {}
-        
-        return dt_cols_summary
+            pass
 
     def data_correlation(self, methods='pearson'):
         """
@@ -133,6 +127,8 @@ class DataSummary:
         --------
             pandas.DataFrame: Correlation Matrix 요약.
         """
-        corr_matrix = round(self.input[self.num_cols].corr(method=methods), 2)
-        
-        return corr_matrix
+        if self.num_cols is not None and len(self.num_cols) > 0:
+            corr_matrix = round(self.input[self.num_cols].corr(method=methods), 2)
+            return corr_matrix
+        else:
+            pass
