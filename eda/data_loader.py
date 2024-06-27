@@ -3,27 +3,6 @@ import numpy as np
 import pandas as pd
 
 class DataLoader:
-    """
-    # DataLoader Class
-    
-    데이터를 로드하는 클래스로 다양한 Format(Pandas DataFrame / List / Dictionary / Numpy Array / Json)의 데이터를 Pandas DataFrame으로 변환.
-    
-    Attributes:
-    -----------
-        input :
-            EDA를 수행할 Dataset (Pandas DataFrame / List / Dictionary / Numpy Array / Json).
-        
-    Methods:
-    --------
-        load_data() :
-            Pandas DataFrame / List / Dictionary / Numpy Array / Json을 pd.DataFrame으로 변환하는 함수.
-        get_numerical_cols() :
-            input data의 numerical columns를 출력하는 함수.
-        get_categorical_cols() :
-            input data의 categorical columns를 출력하는 함수.
-        get_datetime_cols() :
-            input data의 datetime columns를 출력하는 함수.
-    """
     def __init__(self, input):
         self.input = input
 
