@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 
-
 def generate_testset():
     np.random.seed(42)
     date_range = pd.date_range(start='2021-01-01', end='2023-12-31', freq='D')
