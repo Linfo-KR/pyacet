@@ -163,3 +163,7 @@ cython_debug/
 # Test Folder
 .test
 test/
+
+# Documents
+.documents
+documents/
