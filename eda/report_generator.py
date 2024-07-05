@@ -13,16 +13,9 @@ from eda.utils import *
 class ReportGenerator:
     def __init__(self, input, output_dir, dataset_name):
         self.summary = DataSummary(input)
-        self.output_dir = self._ensure_trailing_slash(output_dir)
+        self.output_dir = ensure_trailing_slash(output_dir)
         self.dataset_name = dataset_name
-        self._create_output_directory()
-
-    def _ensure_trailing_slash(self, path):
-        return path if path.endswith('/') else path + '/'
-
-    def _create_output_directory(self):
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir, exist_ok=True)
+        create_output_directory(self.output_dir)
 
     def generate_report(self):
         pdf = PDF(self.dataset_name)

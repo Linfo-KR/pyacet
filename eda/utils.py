@@ -1,5 +1,28 @@
+import os
+import time
+
 import numpy as np
 import pandas as pd
+
+from functools import wraps
+
+def ensure_trailing_slash(path):
+    return path if path.endswith('/') else path + '/'
+
+def create_output_directory(output):
+    if not os.path.exists(output):
+        os.makedirs(output, exist_ok=True)
+        
+def timer(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        stime = time.perf_counter()
+        result = func(*args, **kwargs)
+        etime = time.perf_counter()
+        runtime = round((etime - stime), 0)
+        print(f"{func.__qualname__}'s runtime: {runtime} sec", flush=True)
+        return result
+    return wrapper
 
 def generate_testset():
     np.random.seed(42)

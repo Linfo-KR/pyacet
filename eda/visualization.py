@@ -37,6 +37,8 @@ class Visualization(GraphGenerator):
             pass
         
         if self.dt_cols is not None:
-            self.generate_logic(sns.lineplot, 'line', kind='multi', x=self.dt_cols, y=self.num_cols)
+            modes = ['all', 'year', 'quarter', 'month', 'day', 'hour']
+            for mode in modes:
+                self.generate_logic(sns.lineplot, 'line', kind='multi', x=self.dt_cols, y=self.num_cols, mode=mode)
         else:
             pass
