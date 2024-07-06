@@ -1,8 +1,8 @@
 import seaborn as sns
 
-from eda.data_loader import DataLoader
-from eda.data_summary import DataSummary
-from eda.graph_generator import GraphGenerator
+from pyacet.data_loader import DataLoader
+from pyacet.data_summary import DataSummary
+from pyacet.graph_generator import GraphGenerator
 
 class Visualization(GraphGenerator):
     def __init__(self, input, output_dir):

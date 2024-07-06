@@ -167,3 +167,6 @@ test/
 # Documents
 .documents
 documents/
+
+# main.py
+.main.py

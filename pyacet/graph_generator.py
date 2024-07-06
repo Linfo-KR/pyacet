@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from eda.graph_settings import GraphSettings
-from eda.utils import *
+from pyacet.graph_settings import GraphSettings
+from pyacet.utils import *
 
 
 class GraphGenerator(GraphSettings):
