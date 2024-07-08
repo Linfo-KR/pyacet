@@ -20,9 +20,11 @@ Python Automated Custom EDA Toolkit
 
 # [1] About the Project
 <!-- 프로젝트 소개 추가 -->
+Preparing
 
 ## Features
 <!-- 주요기능 설명 추가 -->
+Preparing
 
 ## Technologies
 - [python](https://www.python.org/) 3.8.5
