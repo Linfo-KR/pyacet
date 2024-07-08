@@ -5,10 +5,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from pyacet.data_loader import DataLoader
-from pyacet.data_summary import DataSummary
-from pyacet.pdf import PDF
-from pyacet.utils import *
+from modules.data_loader import DataLoader
+from modules.data_summary import DataSummary
+from modules.pdf import PDF
+from modules.utils import *
 
 class ReportGenerator:
     def __init__(self, input, output_dir, dataset_name):

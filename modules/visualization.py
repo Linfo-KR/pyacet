@@ -1,8 +1,8 @@
 import seaborn as sns
 
-from pyacet.data_loader import DataLoader
-from pyacet.data_summary import DataSummary
-from pyacet.graph_generator import GraphGenerator
+from modules.data_loader import DataLoader
+from modules.data_summary import DataSummary
+from modules.graph_generator import GraphGenerator
 
 class Visualization(GraphGenerator):
     def __init__(self, input, output_dir):
