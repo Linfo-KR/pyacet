@@ -168,5 +168,6 @@ test/
 .documents
 documents/
 
-# main.py
-.main.py
+# Image Folder
+.img
+img/
