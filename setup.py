@@ -6,7 +6,7 @@ with open('README.md', encoding='utf-8') as f:
 setup(
     name = 'pyacet',
     version = '0.1.0',
-    packages = ['pyacet', 'pyacet.modules'],
+    packages = find_packages(),
     package_data = {'pyacet': ['modules/*.py']},
     include_package_data = True,
     description = 'Python Automated Custom EDA Toolkit',
