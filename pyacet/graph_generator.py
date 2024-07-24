@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from modules.graph_settings import GraphSettings
-from modules.utils import *
+from pyacet.graph_settings import GraphSettings
+from pyacet.utils import *
 
 
 class GraphGenerator(GraphSettings):

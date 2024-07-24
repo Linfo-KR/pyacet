@@ -8,7 +8,7 @@ import matplotlib.dates as mdates
 
 from functools import wraps
 
-from modules.utils import *
+from pyacet.utils import *
 
 
 class GraphSettings:

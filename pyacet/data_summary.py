@@ -1,7 +1,7 @@
 import io
 import datetime as dt
 
-from modules.data_loader import DataLoader
+from pyacet.data_loader import DataLoader
 
 class DataSummary:
     def __init__(self, input):

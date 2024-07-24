@@ -7,8 +7,6 @@ setup(
     name = 'pyacet',
     version = '0.1.0',
     packages = find_packages(),
-    package_data = {'pyacet': ['modules/*.py']},
-    include_package_data = True,
     description = 'Python Automated Custom EDA Toolkit',
     long_description = long_description,
     long_description_content_type = 'text/markdown',
