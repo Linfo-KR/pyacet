@@ -23,7 +23,8 @@ class DataLoader:
             raise TypeError('Input Data Must Be a Pandas DataFrame, Dict, List or Numpy Array.')
         
     def get_numerical_cols(self):
-        num_cols = self.input.select_dtypes(include=[np.number]).columns
+        input = self.load_data()
+        num_cols = input.select_dtypes(include=[np.number]).columns
         if not num_cols.empty:
             return num_cols
         else:
@@ -31,7 +32,8 @@ class DataLoader:
             return None
     
     def get_categorical_cols(self):
-        cat_cols = self.input.select_dtypes(include=['object']).columns
+        input = self.load_data()
+        cat_cols = input.select_dtypes(include=['object']).columns
         if not cat_cols.empty:
             return cat_cols
         else:
@@ -39,7 +41,8 @@ class DataLoader:
             return None
     
     def get_datetime_cols(self):
-        dt_cols = self.input.select_dtypes(include=['datetime']).columns
+        input = self.load_data()
+        dt_cols = input.select_dtypes(include=['datetime']).columns
         if not dt_cols.empty:
             return dt_cols
         else:
