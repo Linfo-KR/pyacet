@@ -1,5 +1,3 @@
-import os
-
 import datetime as dt
 import numpy as np
 import pandas as pd
@@ -25,9 +23,9 @@ class PDF(FPDF):
         self.img_padding = 5
         self.new_x = 'LMARGIN'
         self.new_y = 'NEXT'
-        self.add_font('NanumGothic', '', os.path.join(os.path.abspath('./fonts'), 'NanumGothic.ttf'), uni=True)
-        self.add_font('NanumGothic', 'B', os.path.join(os.path.abspath('./fonts'), 'NanumGothicBold.ttf'), uni=True)
-        self.add_font('NanumGothic', 'I', os.path.join(os.path.abspath('./fonts'), 'NanumGothicExtraBold.ttf'), uni=True)
+        self.add_font('NanumGothic', '', 'fonts/NanumGothic.ttf', uni=True)
+        self.add_font('NanumGothic', 'B', 'fonts/NanumGothicBold.ttf', uni=True)
+        self.add_font('NanumGothic', 'I', 'fonts/NanumGothicExtraBold.ttf', uni=True)
 
     def header(self):
         self.set_font('NanumGothic', 'B', self.header_font_size)
