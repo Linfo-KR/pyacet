@@ -6,15 +6,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
+from matplotlib import font_manager, rcParams
 from functools import wraps
 
+from pyacet.resources import get_font_path
 from pyacet.utils import *
-
 
 class GraphSettings:
     def __init__(self, input, output_dir):
         self.input = input
         self.output_dir = ensure_trailing_slash(output_dir)
+        self._set_font()
         create_output_directory(self.output_dir)
         matplotlib.use('Agg')
         plt.style.use('fast')
@@ -23,6 +25,12 @@ class GraphSettings:
         plt.cla()
         plt.clf()
         plt.close()
+        
+    def _set_font(self):
+        font_path = get_font_path('NanumGothic.ttf')
+        font_property = font_manager.FontProperties(fname=font_path)
+        rcParams['font.family'] = font_property.get_name()
+        rcParams['axes.unicode_minus'] = False
         
     def save_plot(self, fig=None, axes=None, plot_name=str, n=None):
         if axes is not None and n and len(axes) > n:

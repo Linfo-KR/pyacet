@@ -5,8 +5,7 @@ import pandas as pd
 from fpdf import FPDF
 from PIL import Image
 
-from .resources import get_font_path
-
+from pyacet.resources import get_font_path
 
 class PDF(FPDF):
     def __init__(self, dataset_name):
