@@ -11,7 +11,9 @@ class DataLoader:
             return self.input
         elif isinstance(self.input, dict):
             return pd.DataFrame.from_dict(self.input, orient='columns')
-        elif isinstance(self.input, (list, tuple)):
+        elif isinstance(self.input, list):
+            return pd.DataFrame(self.input, columns=self.cols)
+        elif isinstance(self.input, tuple):
             return pd.DataFrame(self.input, columns=self.cols)
         elif isinstance(self.input, np.ndarray):
             return pd.DataFrame(self.input, columns=self.cols)
