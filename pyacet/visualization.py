@@ -5,13 +5,13 @@ from pyacet.data_summary import DataSummary
 from pyacet.graph_generator import GraphGenerator
 
 class Visualization(GraphGenerator):
-    def __init__(self, input, output_dir):
+    def __init__(self, input, cols, output_dir):
         super().__init__(input, output_dir)
-        self.input = DataLoader(input).load_data()
-        self.num_cols = DataLoader(input).get_numerical_cols()
-        self.cat_cols = DataLoader(input).get_categorical_cols()
-        self.dt_cols = DataLoader(input).get_datetime_cols()
-        self.corr_matrix = DataSummary(input).data_correlation()
+        self.input = DataLoader(input, cols).load_data()
+        self.num_cols = DataLoader(input, cols).get_numerical_cols()
+        self.cat_cols = DataLoader(input, cols).get_categorical_cols()
+        self.dt_cols = DataLoader(input, cols).get_datetime_cols()
+        self.corr_matrix = DataSummary(input, cols).data_correlation()
         self.output_dir = output_dir
         
         sns.set_theme(style='whitegrid', palette='deep')

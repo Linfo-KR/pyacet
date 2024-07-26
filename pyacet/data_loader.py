@@ -3,18 +3,19 @@ import numpy as np
 import pandas as pd
 
 class DataLoader:
-    def __init__(self, input):
+    def __init__(self, input, cols):
         self.input = input
+        self.cols = cols
 
     def load_data(self):
         if isinstance(self.input, pd.DataFrame):
             return self.input
         elif isinstance(self.input, dict):
             return pd.DataFrame.from_dict(self.input, orient='columns')
-        elif isinstance(self.input, list):
-            return pd.DataFrame(self.input)
+        elif isinstance(self.input, list or tuple):
+            return pd.DataFrame(self.input, columns=self.cols)
         elif isinstance(self.input, np.ndarray):
-            return pd.DataFrame(self.input)
+            return pd.DataFrame(self.input, columns=self.cols)
         elif isinstance(self.input, json):
             return pd.read_json(self.input)
         else:

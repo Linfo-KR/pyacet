@@ -4,11 +4,11 @@ import datetime as dt
 from pyacet.data_loader import DataLoader
 
 class DataSummary:
-    def __init__(self, input):
-        self.input = DataLoader(input).load_data()
-        self.num_cols = DataLoader(input).get_numerical_cols()
-        self.cat_cols = DataLoader(input).get_categorical_cols()
-        self.dt_cols = DataLoader(input).get_datetime_cols()
+    def __init__(self, input, cols):
+        self.input = DataLoader(input, cols).load_data()
+        self.num_cols = DataLoader(input, cols).get_numerical_cols()
+        self.cat_cols = DataLoader(input, cols).get_categorical_cols()
+        self.dt_cols = DataLoader(input, cols).get_datetime_cols()
         
     def data_info(self):
         buffer = io.StringIO()

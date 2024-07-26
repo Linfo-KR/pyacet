@@ -11,8 +11,8 @@ from pyacet.pdf import PDF
 from pyacet.utils import *
 
 class ReportGenerator:
-    def __init__(self, input, output_dir, dataset_name):
-        self.summary = DataSummary(input)
+    def __init__(self, input, cols, output_dir, dataset_name):
+        self.summary = DataSummary(input, cols)
         self.output_dir = ensure_trailing_slash(output_dir)
         self.dataset_name = dataset_name
         create_output_directory(self.output_dir)
