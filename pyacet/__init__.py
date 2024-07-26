@@ -9,7 +9,7 @@ from .utils import *
 from .resources import get_font_path
 
 __all__ = [
-    'DataLoader', 'DataSummary', 'GraphGenerator', 'GraphSettings',
+    'DataLoader', 'DataSummary', 'GraphGenerator', 'GraphSettings', 'get_font_path'
     'Visualization', 'ReportGenerator', 'PDF', 'ensure_trailing_slash', 'create_output_directory'
     ]
 

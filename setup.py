@@ -16,6 +16,6 @@ setup(
     install_requires = open('requirements.txt').read().splitlines(),
     include_package_data = True,
     package_data = {
-        '': ['fonts/*.ttf'],
+        '': ['pyacet/fonts/*.ttf'],
     },
 )

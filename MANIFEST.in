@@ -1,4 +1,4 @@
 include requirements.txt
 include README.md
-include fonts/*.ttf
+include pyacet/fonts/*.ttf
 recursive-include pyacet *
