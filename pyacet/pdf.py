@@ -23,9 +23,9 @@ class PDF(FPDF):
         self.img_padding = 5
         self.new_x = 'LMARGIN'
         self.new_y = 'NEXT'
-        self.add_font('NanumGothic', '', './fonts/NANUMGOTHIC.TTF', uni=True)
-        self.add_font('NanumGothic', 'B', './fonts/NANUMGOTHICBOLD.TTF', uni=True)
-        self.add_font('NanumGothic', 'I', './fonts/NANUMGOTHICEXTRABOLD.TTF', uni=True)
+        self.add_font('NanumGothic', '', './fonts/NanumGothic.ttf', uni=True)
+        self.add_font('NanumGothic', 'B', './fonts/NanumGothicBold.ttf', uni=True)
+        self.add_font('NanumGothic', 'I', './fonts/NanumGothicExtraBold.ttf', uni=True)
 
     def header(self):
         self.set_font('NanumGothic', 'B', self.header_font_size)
