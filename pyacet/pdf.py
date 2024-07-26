@@ -23,16 +23,19 @@ class PDF(FPDF):
         self.img_padding = 5
         self.new_x = 'LMARGIN'
         self.new_y = 'NEXT'
+        self.add_font('NanumGothic', '', './fonts/NANUMGOTHIC.TTF', uni=True)
+        self.add_font('NanumGothic', 'B', './fonts/NANUMGOTHICBOLD.TTF', uni=True)
+        self.add_font('NanumGothic', 'I', './fonts/NANUMGOTHICEXTRABOLD.TTF', uni=True)
 
     def header(self):
-        self.set_font('Helvetica', 'B', self.header_font_size)
+        self.set_font('NanumGothic', 'B', self.header_font_size)
         self.cell(0, 10, 'Data Summary Report', new_x=self.new_x, new_y=self.new_y, align='C')
-        self.set_font('Helvetica', 'B', self.lv2_font_size)
+        self.set_font('NanumGothic', 'B', self.lv2_font_size)
         self.cell(0, 10, f"- {self.dataset_name} Dataset -", new_x=self.new_x, new_y=self.new_y, align='C')
 
     def footer(self):
         self.set_y(-15)
-        self.set_font('Helvetica', 'I', 8)
+        self.set_font('NanumGothic', 'I', 8)
         self.cell(0, 10, f'Page {self.page_no()}', new_x=self.new_x, new_y=self.new_y, align='C')
         self.set_y(-15)
         self.cell(0, 10, f"Generated at {self.generate_time}", new_x=self.new_x, new_y=self.new_y, align='R')
@@ -43,7 +46,7 @@ class PDF(FPDF):
             2: self.lv2_font_size,
             3: self.lv3_font_size
         }.get(level, self.content_font_size)
-        self.set_font('Helvetica', 'B', font_size)
+        self.set_font('NanumGothic', 'B', font_size)
         self.cell(0, 10, title, new_x=self.new_x, new_y=self.new_y, align='L')
         self.ln(self.content_margin / 5)
         
@@ -66,7 +69,7 @@ class PDF(FPDF):
         elif not none_title:
             self.chapter_title(title, level)
         
-        self.set_font('Helvetica', '', self.content_font_size)
+        self.set_font('NanumGothic', '', self.content_font_size)
         self.multi_cell(0, 10, body)
         
         if last:
@@ -82,7 +85,7 @@ class PDF(FPDF):
             return
         
         df = self._convert_to_dataframe(df)
-        self.set_font('Helvetica', '', self.table_font_size)
+        self.set_font('NanumGothic', '', self.table_font_size)
         tbl_h = self.font_size + 2
 
         idx_width, col_widths = self._calculate_widths(df)
@@ -100,7 +103,7 @@ class PDF(FPDF):
                 if not none_title:
                     self.chapter_title(title, level)
 
-            self.set_font('Helvetica', '', self.table_font_size)
+            self.set_font('NanumGothic', '', self.table_font_size)
             self._add_table_header(idx_width, sub_df, sub_col_widths, tbl_h)
             self._add_table_data(idx_width, sub_df, sub_col_widths, tbl_h)
 
