@@ -5,6 +5,8 @@ import pandas as pd
 from fpdf import FPDF
 from PIL import Image
 
+from .resources import get_font_path
+
 
 class PDF(FPDF):
     def __init__(self, dataset_name):
@@ -23,9 +25,9 @@ class PDF(FPDF):
         self.img_padding = 5
         self.new_x = 'LMARGIN'
         self.new_y = 'NEXT'
-        self.add_font('NanumGothic', '', 'fonts/NanumGothic.ttf', uni=True)
-        self.add_font('NanumGothic', 'B', 'fonts/NanumGothicBold.ttf', uni=True)
-        self.add_font('NanumGothic', 'I', 'fonts/NanumGothicExtraBold.ttf', uni=True)
+        self.add_font('NanumGothic', '', get_font_path('NanumGothic.ttf'), uni=True)
+        self.add_font('NanumGothic', 'B', get_font_path('NanumGothicBold.ttf'), uni=True)
+        self.add_font('NanumGothic', 'I', get_font_path('NanumGothicExtraBold.ttf'), uni=True)
 
     def header(self):
         self.set_font('NanumGothic', 'B', self.header_font_size)

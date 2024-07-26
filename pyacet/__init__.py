@@ -6,6 +6,7 @@ from .visualization import Visualization
 from .report_generator import ReportGenerator
 from .pdf import PDF
 from .utils import *
+from .resources import get_font_path
 
 __all__ = [
     'DataLoader', 'DataSummary', 'GraphGenerator', 'GraphSettings',
