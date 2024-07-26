@@ -1,4 +1,3 @@
-import json
 import numpy as np
 import pandas as pd
 
@@ -12,11 +11,11 @@ class DataLoader:
             return self.input
         elif isinstance(self.input, dict):
             return pd.DataFrame.from_dict(self.input, orient='columns')
-        elif isinstance(self.input, list or tuple):
+        elif isinstance(self.input, (list, tuple)):
             return pd.DataFrame(self.input, columns=self.cols)
         elif isinstance(self.input, np.ndarray):
             return pd.DataFrame(self.input, columns=self.cols)
-        elif isinstance(self.input, json):
+        elif isinstance(self.input, str):
             return pd.read_json(self.input)
         else:
             raise TypeError('Input Data Must Be a Pandas DataFrame, Dict, List or Numpy Array.')
