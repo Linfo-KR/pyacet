@@ -18,11 +18,8 @@ class Visualization(GraphGenerator):
         
     def visualize(self, exclude_cols=None):
         if exclude_cols is not None:
-            self.input.columns = [cols for cols in self.input.columns if cols not in exclude_cols]
-            self.cat_cols = [cols for cols in self.cat_cols if cols not in exclude_cols]
-        else:
-            self.input.columns = self.input.columns
-            self.cat_cols = self.cat_cols
+            all_exclude_cols = [cols for cols in self.input.columns if cols not in exclude_cols]
+            cat_exclude_cols = [cols for cols in self.cat_cols if cols not in exclude_cols]
         
         if self.num_cols is not None:
             self.generate_logic(sns.histplot, 'histogram', kind='sub', x=self.num_cols, bins=15, kde=False)
@@ -31,15 +28,15 @@ class Visualization(GraphGenerator):
             self.generate_logic(sns.boxplot, 'box', kind='sub', y=self.num_cols)
             self.generate_logic(sns.violinplot, 'violin', kind='sub', y=self.num_cols)
             self.generate_logic(sns.heatmap, 'heatmap', kind='single', data=self.corr_matrix, annot=True, fmt=".2f", cmap='coolwarm', cbar=True)
-            self.generate_logic(sns.boxplot, 'box', kind='multi', x=self.cat_cols, y=self.num_cols)
-            self.generate_logic(sns.violinplot, 'violin', kind='multi', x=self.cat_cols, y=self.num_cols)
-            self.generate_logic(sns.scatterplot, 'scatter', kind='multi', x=self.input.columns, y=self.num_cols)
+            self.generate_logic(sns.boxplot, 'box', kind='multi', x=cat_exclude_cols, y=self.num_cols)
+            self.generate_logic(sns.violinplot, 'violin', kind='multi', x=cat_exclude_cols, y=self.num_cols)
+            self.generate_logic(sns.scatterplot, 'scatter', kind='multi', x=all_exclude_cols, y=self.num_cols)
         else:
             pass
         
         if self.cat_cols is not None:
-            self.generate_logic(sns.barplot, 'bar', kind='multi', x=self.cat_cols, y=self.num_cols)
-            self.generate_logic(sns.countplot, 'count', kind='multi', x=self.cat_cols)
+            self.generate_logic(sns.barplot, 'bar', kind='multi', x=cat_exclude_cols, y=self.num_cols)
+            self.generate_logic(sns.countplot, 'count', kind='multi', x=cat_exclude_cols)
         else:
             pass
         
