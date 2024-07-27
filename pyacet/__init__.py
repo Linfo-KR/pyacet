@@ -13,5 +13,5 @@ __all__ = [
     'Visualization', 'ReportGenerator', 'PDF', 'ensure_trailing_slash', 'create_output_directory'
     ]
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 __author__ = 'YeongIL Kim'
