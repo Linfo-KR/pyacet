@@ -16,7 +16,14 @@ class Visualization(GraphGenerator):
         
         sns.set_theme(style='whitegrid', palette='deep')
         
-    def visualize(self):
+    def visualize(self, exclude_cols=None):
+        if exclude_cols is not None:
+            self.input.columns = [cols for cols in self.input.columns if cols not in exclude_cols]
+            self.cat_cols = [cols for cols in self.cat_cols if cols not in exclude_cols]
+        else:
+            self.input.columns = self.input.columns
+            self.cat_cols = self.cat_cols
+        
         if self.num_cols is not None:
             self.generate_logic(sns.histplot, 'histogram', kind='sub', x=self.num_cols, bins=15, kde=False)
             self.generate_logic(sns.histplot, 'histogram_kde', kind='sub', x=self.num_cols, bins=15, kde=True)

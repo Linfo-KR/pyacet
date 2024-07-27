@@ -17,13 +17,13 @@ class ReportGenerator:
         self.dataset_name = dataset_name
         create_output_directory(self.output_dir)
 
-    def generate_report(self):
+    def generate_report(self, exclude_cols):
         pdf = PDF(self.dataset_name)
         pdf.add_page()
 
         self._add_data_info_section(pdf)
         self._add_numerical_summary_section(pdf)
-        self._add_categorical_summary_section(pdf)
+        self._add_categorical_summary_section(pdf, exclude_cols)
         self._add_datetime_summary_section(pdf)
         self._add_correlation_matrix_section(pdf)
 
@@ -50,10 +50,10 @@ class ReportGenerator:
         else:
             pdf.chapter_body('', "Numerical summary isn't exist.", level=4, none_title=True, last=True)
 
-    def _add_categorical_summary_section(self, pdf):
+    def _add_categorical_summary_section(self, pdf, exclude_cols):
         pdf.add_page()
         pdf.chapter_title('03. Categorical Columns Summary', level=1)
-        categorical_summary = self.summary.data_categorical_summary()
+        categorical_summary = self.summary.data_categorical_summary(exclude_cols=exclude_cols)
         if categorical_summary is not None:
             categorical_summary, features_dict = categorical_summary
             pdf.add_table(categorical_summary, '3.1. Categorical Columns Statistics', level=2)

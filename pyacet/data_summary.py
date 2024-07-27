@@ -29,14 +29,20 @@ class DataSummary:
         else:
             pass
     
-    def data_categorical_summary(self):
+    def data_categorical_summary(self, exclude_cols=None):
         if self.cat_cols is not None and len(self.cat_cols) > 0:
             cat_cols_summary = self.input[self.cat_cols].describe(include='O')
             features_dict = {}
-            for col in self.cat_cols:
-                features = self.input[col].unique()
-                features_dict[col] = {'features': features.tolist(),
-                                      'num_features': len(features)}
+            if exclude_cols is not None:
+                for col in [cols for cols in self.cat_cols if cols not in exclude_cols]:
+                    features = self.input[col].unique()
+                    features_dict[col] = {'features': features.tolist(),
+                                          'num_features': len(features)}
+            else:
+                for col in self.cat_cols:
+                    features = self.input[col].unique()
+                    features_dict[col] = {'features': features.tolist(),
+                                        'num_features': len(features)}
             return cat_cols_summary, features_dict
         else:
             pass
