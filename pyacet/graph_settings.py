@@ -16,10 +16,10 @@ class GraphSettings:
     def __init__(self, input, output_dir):
         self.input = input
         self.output_dir = ensure_trailing_slash(output_dir)
-        self._set_font()
         create_output_directory(self.output_dir)
         matplotlib.use('Agg')
         plt.style.use('fast')
+        self._set_font()
         
     def _clear_plot(self):
         plt.cla()
