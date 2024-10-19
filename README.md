@@ -1,8 +1,6 @@
 # Pyacet
 Python Automated Custom EDA Toolkit
 
-<!--배지-->
-![Repository Size][repository-size-shield]
 
 <!--목차-->
 # Table of Contents
@@ -20,11 +18,16 @@ Python Automated Custom EDA Toolkit
 
 # [1] About the Project
 <!-- 프로젝트 소개 추가 -->
-Preparing
+기초 데이터 분석에 필요한 EDA 과정을 자동화하는 프로젝트.
+ - Data Information Reporting 기능 수행
+ - Data Visualizing 기능 수행
 
 ## Features
 <!-- 주요기능 설명 추가 -->
-Preparing
+1. Data Information Reporting 기능
+ - Preparing Detail Contents...
+2. Data Visualizing 기능
+ - Preparing Detail Contents...
 
 ## Technologies
 - [python](https://www.python.org/) 3.8.5
@@ -52,18 +55,29 @@ git clone https://github.com/Linfo-KR/pyacet.git
 pip install git+https://github.com/Linfo-KR/pyacet.git
 ```
 
+## Configuration
+- Preparing Detail Contents...
 
 
 # [3] Usage
+<!-- 테스트 데이터셋 기초 사용법 -->
+1. 기본 사용법(Module 내 Test Dataset)
 ```python
 import pyacet
 
-data = pyacet.utils.generate_testset()
-pyacet.ReportGenerator(data, output_path, 'Dataset Name').generate_report()
-pyacet.Visualization(data, output_path).visualize()
-```
-<!-- 출력물 예시 추가 -->
+input_data = pyacet.utils.generate_testset()
 
+pyacet.ReportGenerator(input_data, cols, output_dir, dataset_name).generate_report(exclude_cols)
+pyacet.Visualization(input_data, cols, output_dir).visualize(exclude_cols)
+```
+
+<!-- 유저 커스터마이징 및 데이터 전처리 과정 -->
+2. User Customizing
+- Preparing Detail Contents...
+
+<!-- 출력물 예시 추가 -->
+3. Output Examples
+- Preparing Detail Contents...
 
 
 # [4] Contact
@@ -95,6 +109,3 @@ MIT 라이센스
 [license-url]: LICENSE.md
 [contribution-url]: CONTRIBUTION.md
 [readme-eng-url]: ../README.md
-
-
-

@@ -14,6 +14,7 @@ setup(
     author_email = 'linfo4931@gmail.com',
     url = 'https://github.com/Linfo-KR/pyacet',
     install_requires = open('requirements.txt').read().splitlines(),
+    python_requires = '3.8>=',
     include_package_data = True,
     package_data = {
         '': ['pyacet/fonts/*.ttf'],
